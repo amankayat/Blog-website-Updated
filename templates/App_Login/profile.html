@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Profile page
+{% endblock %}
+
+{% block body_block %}
+
+<h2>Your Profile</h2>
+{% if user.user_profile %}
+<img src="/media/{{user.user_profile.profile_pic}}"  width = "120px" height="120px" class="rounded-circle mb-3" alt="">
+<br>
+<a href="{% url 'change_pic' %}" class="btn btn-info btn-sm">Change profile pic</a>
+{% else %}
+<img src="/media/download.jpg" class="rounded-circle" width = "120px" height="120px" alt="">
+<br>
+<a href="{% url 'add_pro_pic' %}" class="btn btn-info btn-sm">Change profile pic</a>
+
+{% endif %}
+<p>Username: {{user.username}}</p>
+<p>Email: {{user.email}}</p>
+<p>Name: {{user.username}}</p>
+<p>Username: {{user.first_name}} {{user.last_name}}</p>
+
+<br>
+<a href="{% url 'user_change' %}" class="btn btn-warning">Change Profile</a>
+{% endblock %}
