@@ -1,1 +1,2 @@
-web: gunicorn CCMS.wsgi --log-file -
+release: python manage.py migrate
+web: gunicorn MYBLOGPROJECT.wsgi --log-file -
