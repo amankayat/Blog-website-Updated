@@ -1,3 +1,4 @@
+import pkgutil
 from django.shortcuts import render,HttpResponseRedirect
 from django.views.generic import CreateView,UpdateView,ListView,DetailView,TemplateView,DeleteView
 from App_Blog.forms import commmentForm
@@ -42,8 +43,8 @@ class CreateBlog(LoginRequiredMixin,CreateView):
         return HttpResponseRedirect(reverse('home'))
 
 
-def blog_details(requests,slug):
-    blog = Blog.objects.get(pk=slug)
+def blog_details(requests,pk):
+    blog = Blog.objects.get(pk=pk)
     comment_form = commmentForm()
     already_liked = Likes.objects.filter(blog=blog,user=requests.user)
     if already_liked:
@@ -57,7 +58,7 @@ def blog_details(requests,slug):
             comment.user = requests.user
             comment.blog = blog
             comment.save()
-            return HttpResponseRedirect(reverse('blog_details',kwargs = {'slug':slug}))
+            return HttpResponseRedirect(reverse('blog_details',kwargs = {'slug':pk}))
     return render(requests,'App_Blog/blog_details.html',{'blog':blog,'comment_form':comment_form,'liked':liked})
 
 
