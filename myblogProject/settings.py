@@ -29,7 +29,7 @@ MEDIA_DIR = os.path.join(BASE_DIR,'media')
 SECRET_KEY = 'django-insecure-r^9u(!$6dih3o8%eembh3u)nncm865zyhkar2tv(fj5cetzflf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'App_Login',
     'App_Blog',
     'crispy_forms',
-    'django_cleanup.apps.CleanupConfig',
+    # 'django_cleanup.apps.CleanupConfig',
 ]
 
 # bootstrap,botostrap 3 ,botstrap 4, uni-form
@@ -54,7 +54,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

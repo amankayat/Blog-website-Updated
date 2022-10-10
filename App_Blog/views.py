@@ -19,7 +19,8 @@ class updateBlog(UpdateView,LoginRequiredMixin):
     template_name = "App_Blog/edit_blog.html"
 
     def get_success_url(self,**kwargs) :
-        return reverse_lazy('blog_details',kwargs={'slug':self.object.id})
+        return reverse_lazy('blog_details',kwargs={'pk':self.object.id})
+        # return HttpResponseRedirect(reverse('home'))
 
 class BlogList(ListView):
     context_object_name = 'blogs'
@@ -58,7 +59,7 @@ def blog_details(requests,pk):
             comment.user = requests.user
             comment.blog = blog
             comment.save()
-            return HttpResponseRedirect(reverse('blog_details',kwargs = {'slug':pk}))
+            return HttpResponseRedirect(reverse('blog_details',kwargs = {'pk':pk}))
     return render(requests,'App_Blog/blog_details.html',{'blog':blog,'comment_form':comment_form,'liked':liked})
 
 
@@ -70,7 +71,7 @@ def liked(requests,pk):
     if not already_liked:
         liked_post =Likes(blog=blog,user=user)
         liked_post.save()
-    return HttpResponseRedirect(reverse('blog_details',kwargs={'slug':blog.pk}))
+    return HttpResponseRedirect(reverse('blog_details',kwargs={'pk':blog.pk}))
 
 @login_required
 def unlike(requests,pk):
@@ -79,6 +80,6 @@ def unlike(requests,pk):
     user = requests.user
     already_liked = Likes.objects.filter(blog=blog,user=user)
     already_liked.delete()
-    return HttpResponseRedirect(reverse('blog_details',kwargs={'slug':blog.pk}))
+    return HttpResponseRedirect(reverse('blog_details',kwargs={'pk':blog.pk}))
 
 
