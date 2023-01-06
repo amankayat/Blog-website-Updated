@@ -11,5 +11,6 @@ urlpatterns = [
     path('unliked/<int:pk>',views.unlike,name = "unliked_post"),
     path('myblog/',views.MyBlog.as_view(),name = "myblog"),
     path('editblog/<int:pk>',views.updateBlog.as_view(),name = "edit_blog"),
+    path('deleteblog/<int:pk>',views.blogdelete,name = "delete_blog"),
    
 ]

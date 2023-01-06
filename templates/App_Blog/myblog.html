@@ -22,7 +22,9 @@ My Blog
         <h6>{{blog.liked_blog.count}} Likes | {{blog.blog_comment.count}} Comments</h6>
     </div>
 </div>
-<a href="{% url 'edit_blog' blog.id %}" class="btn btn-primary">Edit Details</a>
+<a href="{% url 'edit_blog' blog.id %}" class="btn btn-primary p-2">Edit Details</a>
+
+<a href="{% url 'delete_blog' blog.id %}" class="btn btn-primary p-2">Delete Blog</a>
 
 <hr>
 

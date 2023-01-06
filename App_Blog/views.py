@@ -83,3 +83,7 @@ def unlike(requests,pk):
     return HttpResponseRedirect(reverse('blog_details',kwargs={'pk':blog.pk}))
 
 
+def blogdelete(request,pk):
+    blg = Blog.objects.get(pk=pk)
+    blg.delete()
+    return HttpResponseRedirect(reverse('home'))
