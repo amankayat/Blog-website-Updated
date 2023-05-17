@@ -149,21 +149,6 @@ def blog_details(requests,pk):
     return render(requests,'App_Blog/blog_details.html',{'blog':blog,'comment_form':comment_form,'liked':liked})
 
 
-def fav(requests,pk):
-    blog = Blog.objects.get(pk=pk)
-    user = requests.user
-    already_saved = favrourites.objects.filter(blog=blog,user=user)
-    if not already_saved:
-        saved_post = favrourites(blog=blog,user=user)
-        saved_post.save()
-    return HttpResponseRedirect(reverse('blog_list',kwargs={'pk':blog.pk}))
-
-def unfav(requests,pk):
-    blog = Blog.objects.get(pk=pk)
-    user = requests.user
-    already_saved = favrourites.objects.filter(blog=blog,user=user)
-    already_saved.delete()
-    return HttpResponseRedirect(reverse('blog_list',kwargs={'pk':blog.pk}))
 
 @login_required
 def liked(requests,pk):
