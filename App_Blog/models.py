@@ -4,6 +4,8 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import User
 
+
+
 class Blog(models.Model):
     author = models.ForeignKey(User,on_delete=models.CASCADE,related_name='post_author')
     blog_title = models.CharField(max_length=500,verbose_name="put a title")
@@ -12,6 +14,7 @@ class Blog(models.Model):
     blog_image = models.ImageField(upload_to = 'blog_images',verbose_name="Blog image")
     publish_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
+    
 
     class Meta:
         ordering = ['-publish_date']
@@ -34,6 +37,9 @@ class comment(models.Model):
 class Likes(models.Model):
     blog = models.ForeignKey(Blog,on_delete=models.CASCADE,related_name='liked_blog')
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='liker_user')
+
+
+
 
 
 

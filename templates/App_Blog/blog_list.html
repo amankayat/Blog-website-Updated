@@ -5,6 +5,27 @@
 {% endblock %}
 
 {% block body_block %}
+{% if messages %}
+
+{% for msg in messages %}
+<div class = "alert alert-success alert-dismissible" >
+   {{msg}}
+   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+</div>
+{% endfor %}
+{% endif %}
+
+
+
+
+<form action="/blog/search/" method='get'  >
+    <input class="form-control mb-2" placeholder="search blog here..." type="search" name="search"> 
+    <button type="submit" class="btn btn-warning mb-3">Search</button>
+</form>
+
 
 
 {% for blog in blogs %}
@@ -33,7 +54,14 @@
     {% endif %}
             </p>
             <h6>Posted By: <a href="">{{blog.author}}</a> </h6>
-            <h6>{{blog.liked_blog.count}} Likes | {{blog.blog_comment.count}} Comments</h6>
+            <h6>{{blog.liked_blog.count}} Likes | {{blog.blog_comment.count}} Comments | 
+
+
+
+
+
+
+            </h6>
     
         </div>
     </div>
@@ -41,5 +69,7 @@
 
 </div>
 {% endfor %}
+
+
 
 {% endblock %}

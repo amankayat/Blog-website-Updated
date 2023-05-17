@@ -9,6 +9,6 @@ create new account
 <form action="" method="post">
     {% csrf_token %}
     {{form|crispy}}
-    <input type="submit" class="btn btn-primary" >
+    <input type="submit" class="btn btn-primary" value="Login">
 </form>
 {% endblock %}

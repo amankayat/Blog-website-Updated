@@ -6,19 +6,41 @@ create new account
 
 {% block body_block %}
 
-{% if registered %}
-<div class = "alert alert-success" >
-    Account created successfully <a href="{% url 'login' %}">Login here</a>
-</div>
-{% else %}
+{% if messages %}
 
-<h2>Create New Account</h2>
-<form action="" method="post" novalidate>
-    {% csrf_token %}
-    {{form|crispy}}
-    <input type="submit" value="submit" class="btn btn-success">
-</form>
+{% for msg in messages %}
+<div class = "alert alert-success alert-dismissible" >
+   {{msg}}
+   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+</div>
+{% endfor %}
+{% endif %}
+
+
+<h2 class="card-header text-center mb-5">Create New Account</h2>
+<div class = "container">  
+     
+    <form method="post">  
+      {% csrf_token %}  
+        {% for field in form %}  
+        <p>  
+          {{ field.label_tag }}<br>  
+          {{ field }}  
+          {% if field.help_text %}  
+            <small style="display: none ">{{ field.help_text }}</small>  
+          {% endif %}  
+          {% for error in field.errors %}  
+            <p style="color: red">{{ error }}</p>  
+          {% endfor %}  
+        </p>  
+        {% endfor %}  
+      <button class="btn btn-primary" type="submit">Sign up</button>  
+    </form>  
+  </div>  
 <br>
 <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
-{% endif %}
+
 {% endblock %}

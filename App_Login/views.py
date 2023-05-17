@@ -1,20 +1,69 @@
 
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponseRedirect,HttpResponse
+from django.shortcuts import render,redirect
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm,PasswordChangeForm
 from django.contrib.auth import login,logout,authenticate
 from django.urls import reverse
+from django.conf import settings
+import uuid
+from django.core.mail import send_mail
+from django.contrib import messages
+from .models import *
 from django.contrib.auth.decorators import login_required
 from App_Login.forms import signupform,UserProfileChange,ProfilePic
+from django.contrib.sites.shortcuts import get_current_site  
+from django.utils.encoding import force_bytes, force_str  
+from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
+from django.template.loader import render_to_string  
+from .token import account_activation_token  
+from django.contrib.auth.models import User  
+from django.core.mail import EmailMessage  
+
+
 def sign_up(requests):
-    form = signupform()
-    registered = False
+    
+    
     if requests.method == 'POST':
-        form = UserCreationForm(data = requests.POST)
-        if form.is_valid():
-            form.save()
-            registered = True
-    return render(requests,'App_Login/sign_up.html',{'form':form,'registered':registered})
+        form = signupform(requests.POST)  
+        if form.is_valid():  
+            # save form in the memory not in database  
+            emailvalue= form.cleaned_data.get("email")
+            passwordvalue1= form.cleaned_data.get("password1")
+            passwordvalue2= form.cleaned_data.get("password2")
+            user = form.save(commit=False)  
+            if passwordvalue1 == passwordvalue2:
+                try:
+                    user= User.objects.get(email=emailvalue)
+                    messages.success(requests,"The email you entered has already been taken. Please try another email.")
+                    return render(requests,'App_Login/sign_up.html',{'form':form})
+                except User.DoesNotExist:
+                    user.is_active = False  
+                    user.save()  
+                    # to get the domain of the current site  
+                    current_site = get_current_site(requests)  
+                    mail_subject = 'Blog Account Verification '  
+                    message = render_to_string('App_Login/acc_active_email.html', {  
+                        'user': user,  
+                        'domain': current_site.domain,  
+                        'uid':urlsafe_base64_encode(force_bytes(user.pk)),  
+                        'token':account_activation_token.make_token(user),  
+                    })  
+                    to_email = form.cleaned_data.get('email')  
+                    email = EmailMessage(  
+                                mail_subject, message, to=[to_email]  
+                    )  
+                    email.send()  
+                    messages.success(requests,"Please confirm your email address to complete the registration.")
+            else:
+                messages.success(requests,"The email you entered has already been taken. Please try another email.")
+                return render(requests,'App_Login/sign_up.html',{'form':form})
+            
+    else:
+        form = signupform()  
+           
+             
+    return render(requests,'App_Login/sign_up.html',{'form':form})
 
 def login_page(requests):
     form = AuthenticationForm()
@@ -85,3 +134,22 @@ def change_pro_pic(requests):
             return HttpResponseRedirect(reverse('profile'))
     return render(requests,"App_Login/pro_pic_add.html",{'form':form})
 
+
+def error(requests):
+    return render(requests,'App_Login/error.html')
+
+def activate(request, uidb64, token):  
+    User = get_user_model()  
+    valid = False
+    try:  
+        uid = force_str(urlsafe_base64_decode(uidb64))  
+        user = User.objects.get(pk=uid)  
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):  
+        user = None  
+    if user is not None and account_activation_token.check_token(user, token):  
+        user.is_active = True  
+        user.save()  
+        valid = True
+        return render(request,"App_Login/success.html",{'valid':valid})  
+    else:  
+        return render(request,"App_Login/success.html",{'valid':valid})    

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block title %}
+
+{% endblock %}
+
+{% block body_block %}
+{% if messages %}
+
+{% for msg in messages %}
+<div class = "alert alert-success alert-dismissible" >
+   {{msg}}
+   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+</div>
+{% endfor %}
+{% endif %}
+
+
+
+
+
+
+
+{% for blog in results %}
+   
+
+
+
+<div class="jumbotron jumbotron-fluid jumbo-color border mb-5">
+    <div class="ml-3">
+        <h2>{{blog.blog_title}}</h2>
+
+        <h6> <i>{{blog.publish_date}}</i> </h6>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-4">
+            <img src="/media/{{blog.blog_image}}" alt="{{bolg.blog_title}}" srcset="" width ="100%">
+        </div>
+    
+        <div class="col-sm-8">
+            <p>{{blog.blog_content|range_filter|linebreaks }}
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'blog_details' blog.id %}">Read more</a>
+                {% else %}
+            <p> <b>*You are not allowed to view the full article* </b> </p>
+            
+    
+    {% endif %}
+            </p>
+            <h6>Posted By: <a href="">{{blog.author}}</a> </h6>
+            <h6>{{blog.liked_blog.count}} Likes | {{blog.blog_comment.count}} Comments</h6>
+    
+        </div>
+    </div>
+   
+
+</div>
+
+
+{% empty %}
+   
+<h1>no result!!</h1>
+{% endfor %}
+
+
+
+
+
+{% endblock %}
